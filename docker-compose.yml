@@ -1,0 +1,11 @@
+version: "3"
+services:
+  database:
+    image: mysql:5.7
+    ports:
+      - 3306:3306
+    volumes:
+      - "./tmp/mysql:/var/lib/mysql:rw"
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret
+      - MYSQL_DATABASE=rotation_shifts
