@@ -5,65 +5,83 @@ import (
 	"strconv"
 
 	"github.com/labstack/echo"
-	"github.com/youyo/rotation-shifts/models"
+	"github.com/youyo/rotation-shifts/models/queries"
+	"github.com/youyo/rotation-shifts/models/services"
 )
 
-func GetShift(c echo.Context) error {
-	m := models.NewShift()
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, response(nil, err))
-	}
-	user, err := m.GetShift(id)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, response(nil, err))
-	}
-	return c.JSON(http.StatusOK, response(user, nil))
-}
-
 func PostShift(c echo.Context) error {
-	m := models.NewShift()
+	c.Echo().Logger.Debug("Called controllers.PostShift()")
+	m := queries.NewShift()
 	if err := c.Bind(m); err != nil {
 		return c.JSON(http.StatusBadRequest, response(nil, err))
 	}
-	if err := m.PostShift(m.Name, m.UserId); err != nil {
-		return c.JSON(http.StatusBadRequest, response(nil, err))
+
+	statusCode, resp, err := services.PostShift(m.Name, m.UserId)
+	if err != nil {
+		return c.JSON(statusCode, response(nil, err))
 	}
-	return c.JSON(http.StatusCreated, response("created", nil))
+
+	return c.JSON(statusCode, response(resp, nil))
 }
 
 func PatchShift(c echo.Context) error {
-	m := models.NewShift()
+	c.Echo().Logger.Debug("Called controllers.PatchShift()")
+
+	m := queries.NewShiftDetail()
 	if err := c.Bind(m); err != nil {
 		return c.JSON(http.StatusBadRequest, response(nil, err))
 	}
+
 	shiftId, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, response(nil, err))
 	}
-	if err := m.PatchShift(shiftId); err != nil {
-		return c.JSON(http.StatusBadRequest, response(nil, err))
+
+	statusCode, resp, err := services.PatchShift(shiftId, m)
+	if err != nil {
+		return c.JSON(statusCode, response(nil, err))
 	}
-	return c.JSON(http.StatusOK, response("updated", nil))
+
+	return c.JSON(statusCode, response(resp, nil))
 }
 
 func DeleteShift(c echo.Context) error {
-	m := models.NewShift()
+	c.Echo().Logger.Debug("Called controllers.DeleteShift()")
 	shiftId, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, response(nil, err))
 	}
-	if err := m.DeleteShift(shiftId); err != nil {
-		return c.JSON(http.StatusBadRequest, response(nil, err))
+
+	statusCode, resp, err := services.DeleteShift(shiftId)
+	if err != nil {
+		return c.JSON(statusCode, response(nil, err))
 	}
-	return c.JSON(http.StatusOK, response("deleted", nil))
+
+	return c.JSON(statusCode, response(resp, nil))
 }
 
 func GetShifts(c echo.Context) error {
-	m := models.NewShifts()
-	users, err := m.GetShifts()
+	c.Echo().Logger.Debug("Called controllers.GetShifts()")
+	statusCode, resp, err := services.GetShifts()
+	if err != nil {
+		c.Echo().Logger.Error(err)
+		return c.JSON(statusCode, response(nil, err))
+	}
+	return c.JSON(statusCode, response(resp, nil))
+}
+
+func GetShift(c echo.Context) error {
+	c.Echo().Logger.Debug("Called controllers.GetShift()")
+	shiftId, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, response(nil, err))
 	}
-	return c.JSON(http.StatusOK, response(users, err))
+
+	statusCode, resp, err := services.GetShift(shiftId)
+	if err != nil {
+		c.Echo().Logger.Error(err)
+		return c.JSON(statusCode, response(nil, err))
+	}
+
+	return c.JSON(statusCode, response(resp, nil))
 }

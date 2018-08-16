@@ -1,5 +1,5 @@
 .envrc
-my.cnf
+my.cnf*
 tmp/
 __*
 vendor/
