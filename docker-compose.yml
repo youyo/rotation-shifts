@@ -9,3 +9,13 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=secret
       - MYSQL_DATABASE=rotation_shifts
+  app:
+    build: ./
+    ports:
+      - 1323:1323
+    environment:
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=secret
+      - MYSQL_HOST=127.0.0.1
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=rotation_shifts

@@ -1,5 +1,13 @@
 .DEFAULT_GOAL := help
 
+## Setup
+setup:
+	go get -v -u github.com/golang/dep/cmd/dep
+
+## Install dependencies
+deps:
+	dep ensure
+
 ## Run
 run:
 	go run *.go
@@ -7,6 +15,14 @@ run:
 ## Run Debug mode
 debug_run:
 	DEBUG=true go run *.go
+
+## Build docker dev image
+build_docker_image:
+	docker image build -t youyo/rotation-shifts:dev .
+
+## Start docker-compose
+docker_compose:
+	docker-compose up
 
 ## GenerateSchema
 generate_schema:
