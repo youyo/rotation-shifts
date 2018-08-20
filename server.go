@@ -26,6 +26,14 @@ func main() {
 		AllowOrigins: []string{"*"},
 		AllowMethods: []string{echo.GET, echo.POST, echo.DELETE, echo.PATCH, echo.PUT},
 	}))
+	if os.Getenv("BASIC_AUTH") == "true" {
+		e.Use(middleware.BasicAuth(func(username, password string, c echo.Context) (bool, error) {
+			if username == os.Getenv("BASIC_AUTH_USER") && password == os.Getenv("BASIC_AUTH_PASS") {
+				return true, nil
+			}
+			return false, nil
+		}))
+	}
 
 	// root
 	e.GET("/", dummy)
