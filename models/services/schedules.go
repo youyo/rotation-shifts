@@ -115,7 +115,7 @@ func (s *Schedule) GetSchedule() (int, *queries.Users, error) {
 	case 1:
 		s.Week = "tuesday_"
 	case 2:
-		s.Week = "wendesday_"
+		s.Week = "wednesday_"
 	case 3:
 		s.Week = "thursday_"
 	case 4:
