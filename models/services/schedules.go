@@ -129,7 +129,16 @@ func (s *Schedule) GetSchedule() (int, *queries.Users, error) {
 	}
 
 	// order_id 確定
-	orderId := totalDays / days
+	for days > totalDays {
+		days = days - totalDays
+	}
+	orderId := 0
+	for orderIdStart := 1; orderIdStart <= maxOrderId; orderIdStart++ {
+		if days <= orderIdStart*7 {
+			orderId = orderIdStart
+			break
+		}
+	}
 
 	// shift_ids 取得
 	shiftIds, err := rotationDetail.SelectShiftIds(conn, s.RotationId, orderId)
