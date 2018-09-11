@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/gocraft/dbr"
-	"github.com/k0kubun/pp"
 )
 
 type (
@@ -70,11 +69,9 @@ func (u *User) DeleteUser(tx *dbr.Tx, id int) error {
 func (u *Users) SelectAssignedUsers(db *dbr.Session, ids []int) (*Users, error) {
 	query := "select * from users where id in ?"
 	if row, err := db.SelectBySql(query, ids).Load(u); row == 0 {
-		pp.Println(u)
 		return u, nil
 	} else if err != nil {
 		return nil, err
 	}
-	pp.Println(u)
 	return u, nil
 }

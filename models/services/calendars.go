@@ -4,8 +4,6 @@ import (
 	"net/http"
 	"strconv"
 	"time"
-
-	"github.com/k0kubun/pp"
 )
 
 type (
@@ -47,7 +45,6 @@ func (c *CalendarEvents) GetCalendarMonthly(rotationId int, yearMonth string) (i
 	if err != nil {
 		return 0, nil, err
 	}
-	pp.Println(firstDay, lastDay)
 
 	// all times
 	var days []string
