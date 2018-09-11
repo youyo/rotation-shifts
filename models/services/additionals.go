@@ -3,19 +3,18 @@ package services
 import (
 	"net/http"
 
-	"github.com/k0kubun/pp"
 	"github.com/youyo/rotation-shifts/db"
 	"github.com/youyo/rotation-shifts/models/queries"
 )
 
-func GetOverride(id int) (int, *queries.Override, error) {
+func GetAdditional(id int) (int, *queries.Additional, error) {
 	conn, err := db.NewConnection()
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
 	}
 
-	u := queries.NewOverride()
-	override, err := u.GetOverride(conn, id)
+	u := queries.NewAdditional()
+	override, err := u.GetAdditional(conn, id)
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
 	}
@@ -23,15 +22,14 @@ func GetOverride(id int) (int, *queries.Override, error) {
 	return http.StatusOK, override, nil
 }
 
-func GetOverrides() (int, *queries.Overrides, error) {
+func GetAdditionals() (int, *queries.Additionals, error) {
 	conn, err := db.NewConnection()
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
 	}
 
-	u := queries.NewOverrides()
-	pp.Println("queries.NewOverrides")
-	overrides, err := u.GetOverrides(conn)
+	u := queries.NewAdditionals()
+	overrides, err := u.GetAdditionals(conn)
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
 	}
@@ -39,7 +37,7 @@ func GetOverrides() (int, *queries.Overrides, error) {
 	return http.StatusOK, overrides, nil
 }
 
-func CreateOverride(name string, date queries.DATE, hour queries.HOUR, rotationId, userId int) (int, string, error) {
+func CreateAdditional(name string, date queries.DATE, hour queries.HOUR, rotationId, userId int) (int, string, error) {
 	conn, err := db.NewConnection()
 	if err != nil {
 		return http.StatusInternalServerError, "", err
@@ -50,8 +48,8 @@ func CreateOverride(name string, date queries.DATE, hour queries.HOUR, rotationI
 	}
 	defer tx.RollbackUnlessCommitted()
 
-	u := queries.NewOverride()
-	err = u.InsertOverride(tx, name, date, hour, rotationId, userId)
+	u := queries.NewAdditional()
+	err = u.InsertAdditional(tx, name, date, hour, rotationId, userId)
 	if err != nil {
 		tx.Rollback()
 		return http.StatusInternalServerError, "", err
@@ -62,7 +60,7 @@ func CreateOverride(name string, date queries.DATE, hour queries.HOUR, rotationI
 	return http.StatusCreated, "created", nil
 }
 
-func DeleteOverride(id int) (int, string, error) {
+func DeleteAdditional(id int) (int, string, error) {
 	conn, err := db.NewConnection()
 	if err != nil {
 		return http.StatusInternalServerError, "", err
@@ -73,8 +71,8 @@ func DeleteOverride(id int) (int, string, error) {
 	}
 	defer tx.RollbackUnlessCommitted()
 
-	u := queries.NewOverride()
-	err = u.DeleteOverride(tx, id)
+	u := queries.NewAdditional()
+	err = u.DeleteAdditional(tx, id)
 	if err != nil {
 		tx.Rollback()
 		return http.StatusInternalServerError, "", err

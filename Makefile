@@ -14,7 +14,7 @@ run:
 
 ## Run Debug mode
 debug_run:
-	DEBUG=true go run *.go
+	DEBUG=true BASIC_AUTH=false go run *.go
 
 ## Build docker dev image
 build_docker_image:

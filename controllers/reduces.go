@@ -9,15 +9,15 @@ import (
 	"github.com/youyo/rotation-shifts/models/services"
 )
 
-func GetOverride(c echo.Context) error {
-	c.Echo().Logger.Debug("Called controllers.GetOverride()")
+func GetReduce(c echo.Context) error {
+	c.Echo().Logger.Debug("Called controllers.GetReduce()")
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.Echo().Logger.Error(err)
 		return c.JSON(http.StatusBadRequest, response(nil, err))
 	}
 
-	statusCode, resp, err := services.GetOverride(id)
+	statusCode, resp, err := services.GetReduce(id)
 	if err != nil {
 		c.Echo().Logger.Error(err)
 		return c.JSON(statusCode, response(nil, err))
@@ -25,9 +25,9 @@ func GetOverride(c echo.Context) error {
 	return c.JSON(statusCode, response(resp, nil))
 }
 
-func GetOverrides(c echo.Context) error {
-	c.Echo().Logger.Debug("Called controllers.GetOverrides()")
-	statusCode, resp, err := services.GetOverrides()
+func GetReduces(c echo.Context) error {
+	c.Echo().Logger.Debug("Called controllers.GetReduces()")
+	statusCode, resp, err := services.GetReduces()
 	if err != nil {
 		c.Echo().Logger.Error(err)
 		return c.JSON(statusCode, response(nil, err))
@@ -35,16 +35,16 @@ func GetOverrides(c echo.Context) error {
 	return c.JSON(statusCode, response(resp, nil))
 }
 
-func PostOverride(c echo.Context) error {
-	c.Echo().Logger.Debug("Called controllers.PostOverride()")
+func PostReduce(c echo.Context) error {
+	c.Echo().Logger.Debug("Called controllers.PostReduce()")
 
-	m := queries.NewOverride()
+	m := queries.NewReduce()
 	if err := c.Bind(m); err != nil {
 		c.Echo().Logger.Error(err)
 		return c.JSON(http.StatusBadRequest, response(nil, err))
 	}
 
-	statusCode, resp, err := services.CreateOverride(m.Name, m.Date, m.Hour, m.RotationId, m.UserId)
+	statusCode, resp, err := services.CreateReduce(m.Name, m.Date, m.Hour, m.RotationId, m.UserId)
 	if err != nil {
 		c.Echo().Logger.Error(err)
 		return c.JSON(statusCode, response(nil, err))
@@ -52,15 +52,15 @@ func PostOverride(c echo.Context) error {
 	return c.JSON(statusCode, response(resp, nil))
 }
 
-func DeleteOverride(c echo.Context) error {
-	c.Echo().Logger.Debug("Called controllers.DeleteOverride()")
+func DeleteReduce(c echo.Context) error {
+	c.Echo().Logger.Debug("Called controllers.DeleteReduce()")
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.Echo().Logger.Error(err)
 		return c.JSON(http.StatusBadRequest, response(nil, err))
 	}
 
-	statusCode, resp, err := services.DeleteOverride(id)
+	statusCode, resp, err := services.DeleteReduce(id)
 	if err != nil {
 		c.Echo().Logger.Error(err)
 		return c.JSON(statusCode, response(nil, err))

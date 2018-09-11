@@ -16,10 +16,11 @@ const (
 )
 
 type Schedule struct {
-	RotationId int
-	Date       time.Time
-	Hour       string
-	Week       string
+	RotationId   int
+	Date         time.Time
+	Hour         string
+	Week         string
+	OverrideHour time.Time
 }
 
 func NewSchedule(rotationId int, dateTime string) (*Schedule, error) {
@@ -43,9 +44,10 @@ func NewSchedule(rotationId int, dateTime string) (*Schedule, error) {
 	}
 
 	s := &Schedule{
-		RotationId: rotationId,
-		Date:       date,
-		Hour:       hour,
+		RotationId:   rotationId,
+		Date:         date,
+		Hour:         hour,
+		OverrideHour: date,
 	}
 	return s, nil
 }
@@ -59,14 +61,14 @@ func (s *Schedule) GetSchedule() (int, *queries.Users, error) {
 
 	// check override shift
 	overrides := queries.NewOverrides()
-	overrodeUserIds, err := overrides.SelectOverrideAssignedUserIds(conn, s.RotationId, queries.DATE{Time: s.Date}, s.Hour)
+	overrodeUserIds, err := overrides.SelectOverrideAssignedUserIds(conn, s.RotationId, queries.DATE{Time: s.Date}, queries.HOUR{Time: s.OverrideHour})
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
 	}
 
 	if len(overrodeUserIds) != 0 {
 		users := queries.NewUsers()
-		users, err = users.SelectAssignedUsers(conn, overrodeUserIds)
+		_, err = users.SelectAssignedUsers(conn, overrodeUserIds)
 		if err != nil {
 			return http.StatusInternalServerError, nil, err
 		}

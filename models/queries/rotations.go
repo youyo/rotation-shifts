@@ -1,8 +1,6 @@
 package queries
 
 import (
-	"database/sql/driver"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"time"
@@ -14,39 +12,13 @@ type (
 	Rotation struct {
 		Id        int       `json:"id"`
 		Name      string    `json:"name"`
-		StartDate Date      `json:"start_date"`
+		StartDate DATE      `json:"start_date"`
 		CreatedAt time.Time `json:"created_at"`
 		UpdatedAt time.Time `json:"updated_at"`
 	}
 
-	Date struct {
-		time.Time
-	}
-
 	Rotations []Rotation
 )
-
-func (d *Date) UnmarshalJSON(data []byte) error {
-	t, err := time.Parse("\"2006-01-02\"", string(data))
-	if err != nil {
-		return err
-	}
-	*d = Date{t}
-	return nil
-}
-
-func (d *Date) MarshalJSON() ([]byte, error) {
-	return json.Marshal(d.Format("2006-01-02"))
-}
-
-func (d *Date) Scan(value interface{}) error {
-	d.Time = value.(time.Time)
-	return nil
-}
-
-func (d *Date) Value() (driver.Value, error) {
-	return d.Time, nil
-}
 
 func NewRotation() *Rotation {
 	return new(Rotation)
@@ -76,7 +48,7 @@ func (r *Rotations) GetRotations(db *dbr.Session) (*Rotations, error) {
 	return r, nil
 }
 
-func (r *Rotation) PostRotation(tx *dbr.Tx, name string, startDate Date) error {
+func (r *Rotation) PostRotation(tx *dbr.Tx, name string, startDate DATE) error {
 	d, err := time.Parse("2006-01-02 15:04:05 -0700 MST", fmt.Sprintf("%s", startDate))
 	if err != nil {
 		return err
