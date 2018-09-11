@@ -1,7 +1,6 @@
 package queries
 
 import (
-	"errors"
 	"fmt"
 	"time"
 
@@ -33,20 +32,16 @@ func NewReduces() *Reduces {
 
 func (u *Reduce) GetReduce(db *dbr.Session, id int) (*Reduce, error) {
 	query := "select * from reduces where id=?"
-	if row, err := db.SelectBySql(query, id).Load(u); err != nil {
+	if _, err := db.SelectBySql(query, id).Load(u); err != nil {
 		return nil, err
-	} else if row == 0 {
-		return nil, errors.New("No match records.")
 	}
 	return u, nil
 }
 
 func (u *Reduces) GetReduces(db *dbr.Session) (*Reduces, error) {
 	query := "select * from reduces"
-	if row, err := db.SelectBySql(query).Load(u); err != nil {
+	if _, err := db.SelectBySql(query).Load(u); err != nil {
 		return nil, err
-	} else if row == 0 {
-		return nil, errors.New("No match records.")
 	}
 	return u, nil
 }

@@ -1,10 +1,10 @@
 package queries
 
 import (
-	"errors"
 	"time"
 
 	"github.com/gocraft/dbr"
+	"github.com/k0kubun/pp"
 )
 
 type (
@@ -25,10 +25,8 @@ func NewUser() *User {
 
 func (u *User) GetUser(db *dbr.Session, userId int) (*User, error) {
 	query := "select * from users where id=?"
-	if row, err := db.SelectBySql(query, userId).Load(u); err != nil {
+	if _, err := db.SelectBySql(query, userId).Load(u); err != nil {
 		return nil, err
-	} else if row == 0 {
-		return nil, errors.New("No match records.")
 	}
 	return u, nil
 }
@@ -39,10 +37,8 @@ func NewUsers() *Users {
 
 func (u *Users) GetUsers(db *dbr.Session) (*Users, error) {
 	query := "select * from users"
-	if row, err := db.SelectBySql(query).Load(u); err != nil {
+	if _, err := db.SelectBySql(query).Load(u); err != nil {
 		return nil, err
-	} else if row == 0 {
-		return nil, errors.New("No match records.")
 	}
 	return u, nil
 }
@@ -73,10 +69,12 @@ func (u *User) DeleteUser(tx *dbr.Tx, id int) error {
 
 func (u *Users) SelectAssignedUsers(db *dbr.Session, ids []int) (*Users, error) {
 	query := "select * from users where id in ?"
-	if row, err := db.SelectBySql(query, ids).Load(u); err != nil {
+	if row, err := db.SelectBySql(query, ids).Load(u); row == 0 {
+		pp.Println(u)
+		return u, nil
+	} else if err != nil {
 		return nil, err
-	} else if row == 0 {
-		return nil, errors.New("No match records.")
 	}
+	pp.Println(u)
 	return u, nil
 }

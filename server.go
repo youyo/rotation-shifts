@@ -92,6 +92,9 @@ func main() {
 	// schedules
 	api.GET("/schedules/:rotation_id/:datetime", controllers.GetSchedule)
 
+	// calendars
+	api.GET("/calendars/:rotation_id/:year-month", controllers.GetCalendar)
+
 	e.Logger.Fatal(e.Start(":" + port))
 }
 

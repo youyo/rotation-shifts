@@ -1,7 +1,6 @@
 package queries
 
 import (
-	"errors"
 	"fmt"
 	"time"
 
@@ -33,20 +32,16 @@ func NewAdditionals() *Additionals {
 
 func (u *Additional) GetAdditional(db *dbr.Session, id int) (*Additional, error) {
 	query := "select * from additionals where id=?"
-	if row, err := db.SelectBySql(query, id).Load(u); err != nil {
+	if _, err := db.SelectBySql(query, id).Load(u); err != nil {
 		return nil, err
-	} else if row == 0 {
-		return nil, errors.New("No match records.")
 	}
 	return u, nil
 }
 
 func (u *Additionals) GetAdditionals(db *dbr.Session) (*Additionals, error) {
 	query := "select * from additionals"
-	if row, err := db.SelectBySql(query).Load(u); err != nil {
+	if _, err := db.SelectBySql(query).Load(u); err != nil {
 		return nil, err
-	} else if row == 0 {
-		return nil, errors.New("No match records.")
 	}
 	return u, nil
 }
