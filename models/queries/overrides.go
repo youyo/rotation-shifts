@@ -1,7 +1,6 @@
 package queries
 
 import (
-	"errors"
 	"fmt"
 	"time"
 
@@ -33,20 +32,16 @@ func NewOverrides() *Overrides {
 
 func (u *Override) GetOverride(db *dbr.Session, id int) (*Override, error) {
 	query := "select * from overrides where id=?"
-	if row, err := db.SelectBySql(query, id).Load(u); err != nil {
+	if _, err := db.SelectBySql(query, id).Load(u); err != nil {
 		return nil, err
-	} else if row == 0 {
-		return nil, errors.New("No match records.")
 	}
 	return u, nil
 }
 
 func (u *Overrides) GetOverrides(db *dbr.Session) (*Overrides, error) {
 	query := "select * from overrides"
-	if row, err := db.SelectBySql(query).Load(u); err != nil {
+	if _, err := db.SelectBySql(query).Load(u); err != nil {
 		return nil, err
-	} else if row == 0 {
-		return nil, errors.New("No match records.")
 	}
 	return u, nil
 }

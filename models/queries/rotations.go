@@ -1,7 +1,6 @@
 package queries
 
 import (
-	"errors"
 	"fmt"
 	"time"
 
@@ -30,20 +29,16 @@ func NewRotations() *Rotations {
 
 func (r *Rotation) GetRotation(db *dbr.Session, rotationId int) (*Rotation, error) {
 	query := "select * from rotations where id=?"
-	if row, err := db.SelectBySql(query, rotationId).Load(r); err != nil {
+	if _, err := db.SelectBySql(query, rotationId).Load(r); err != nil {
 		return nil, err
-	} else if row == 0 {
-		return nil, errors.New("No match records.")
 	}
 	return r, nil
 }
 
 func (r *Rotations) GetRotations(db *dbr.Session) (*Rotations, error) {
 	query := "select * from rotations"
-	if row, err := db.SelectBySql(query).Load(r); err != nil {
+	if _, err := db.SelectBySql(query).Load(r); err != nil {
 		return nil, err
-	} else if row == 0 {
-		return nil, errors.New("No match records.")
 	}
 	return r, nil
 }

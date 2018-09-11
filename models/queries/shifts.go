@@ -2,7 +2,6 @@ package queries
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"time"
 
@@ -228,20 +227,16 @@ func (s *Shift) DeleteShift(tx *dbr.Tx, shiftId int) error {
 
 func (s *Shifts) GetShifts(db *dbr.Session) (*Shifts, error) {
 	query := "select * from shifts"
-	if row, err := db.SelectBySql(query).Load(s); err != nil {
+	if _, err := db.SelectBySql(query).Load(s); err != nil {
 		return nil, err
-	} else if row == 0 {
-		return nil, errors.New("No match records.")
 	}
 	return s, nil
 }
 
 func (s *Shift) GetShift(db *dbr.Session, shiftId int) (*Shift, error) {
 	query := "select * from shifts where id=?"
-	if row, err := db.SelectBySql(query, shiftId).Load(s); err != nil {
+	if _, err := db.SelectBySql(query, shiftId).Load(s); err != nil {
 		return nil, err
-	} else if row == 0 {
-		return nil, errors.New("No match records.")
 	}
 	return s, nil
 }
@@ -249,10 +244,8 @@ func (s *Shift) GetShift(db *dbr.Session, shiftId int) (*Shift, error) {
 func (s *Shift) SelectAssignedUserIds(db *dbr.Session, week, hour string, shiftIds []int) ([]int, error) {
 	var userIds []int
 	query := fmt.Sprintf("select user_id from shifts where `%s`=1 and id in ?", week+hour+"00")
-	if row, err := db.SelectBySql(query, shiftIds).Load(&userIds); err != nil {
+	if _, err := db.SelectBySql(query, shiftIds).Load(&userIds); err != nil {
 		return nil, err
-	} else if row == 0 {
-		return nil, errors.New("No match records.")
 	}
 	return userIds, nil
 }
