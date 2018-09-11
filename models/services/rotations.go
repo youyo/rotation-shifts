@@ -37,7 +37,7 @@ func GetRotations() (int, *queries.Rotations, error) {
 	return http.StatusOK, result, nil
 }
 
-func PostRotation(name string, startDate queries.Date) (int, string, error) {
+func PostRotation(name string, startDate queries.DATE) (int, string, error) {
 	conn, err := db.NewConnection()
 	if err != nil {
 		return http.StatusInternalServerError, "", err

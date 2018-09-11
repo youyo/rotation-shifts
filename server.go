@@ -73,8 +73,21 @@ func main() {
 	api.GET("/overrides", controllers.GetOverrides)
 	api.GET("/overrides/:id", controllers.GetOverride)
 	api.POST("/overrides", controllers.PostOverride)
-	api.PATCH("/overrides/:id", controllers.PatchOverrideDetail)
 	api.DELETE("/overrides/:id", controllers.DeleteOverride)
+
+	/*
+		// additional
+		api.GET("/additionals", controllers.GetAdditionals)
+		api.GET("/additionals/:id", controllers.GetAdditional)
+		api.POST("/additionals", controllers.PostAdditional)
+		api.DELETE("/additionals/:id", controllers.DeleteAdditional)
+
+		// reduces
+		api.GET("/reduces", controllers.GetReduces)
+		api.GET("/reduces/:id", controllers.GetReduce)
+		api.POST("/reduces", controllers.PostReduce)
+		api.DELETE("/reduces/:id", controllers.DeleteReduce)
+	*/
 
 	// schedules
 	api.GET("/schedules/:rotation_id/:datetime", controllers.GetSchedule)
