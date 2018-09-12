@@ -67,7 +67,7 @@ func (u *User) DeleteUser(tx *dbr.Tx, id int) error {
 }
 
 func (u *Users) SelectAssignedUsers(db *dbr.Session, ids []int) (*Users, error) {
-	query := "select * from users where id in ?"
+	query := "select id,name,phone_number from users where id in ?"
 	if row, err := db.SelectBySql(query, ids).Load(u); row == 0 {
 		return u, nil
 	} else if err != nil {
