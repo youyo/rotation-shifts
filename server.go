@@ -24,7 +24,7 @@ func main() {
 	// e.Use(middleware.CSRF())
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"*"},
-		AllowMethods: []string{echo.GET, echo.POST, echo.DELETE, echo.PATCH, echo.PUT},
+		AllowMethods: []string{echo.GET, echo.POST, echo.DELETE, echo.PATCH, echo.PUT, echo.OPTIONS},
 	}))
 	if os.Getenv("BASIC_AUTH") == "true" {
 		e.Use(middleware.BasicAuth(func(username, password string, c echo.Context) (bool, error) {
