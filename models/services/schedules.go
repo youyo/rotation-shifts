@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/gocraft/dbr"
 	"github.com/youyo/rotation-shifts/db"
 	"github.com/youyo/rotation-shifts/models/queries"
 )
@@ -59,6 +60,10 @@ func (s *Schedule) GetSchedule() (int, *queries.Users, error) {
 		return http.StatusInternalServerError, nil, err
 	}
 
+	return s.QuerySchedules(conn)
+}
+
+func (s *Schedule) QuerySchedules(conn *dbr.Session) (int, *queries.Users, error) {
 	// check override shift
 	overrides := queries.NewOverrides()
 	overrodeUserIds, err := overrides.SelectOverrideAssignedUserIds(conn, s.RotationId, queries.DATE{Time: s.Date}, queries.HOUR{Time: s.OverrideHour})
@@ -95,6 +100,10 @@ func (s *Schedule) GetSchedule() (int, *queries.Users, error) {
 
 	// スケジュール開始日と取得したい日の差分
 	duration := s.Date.Sub(startDate)
+	if duration < 0 {
+		users := queries.NewUsers()
+		return http.StatusOK, users, nil
+	}
 
 	// duration の総時間から日数を取得
 	days := int(duration.Hours()) / 24

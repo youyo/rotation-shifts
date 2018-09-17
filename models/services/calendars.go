@@ -4,6 +4,8 @@ import (
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/youyo/rotation-shifts/db"
 )
 
 type (
@@ -26,21 +28,14 @@ func (c *CalendarEvents) GetCalendarMonthly(rotationId int, yearMonth string) (i
 	}
 
 	// first day
-	date := time.Now().In(loc)
-	firstDay, err := strconv.Atoi(date.Format("02"))
+	firstDay := 1
+
+	// get last day
+	t, err := time.ParseInLocation("2006-01", yearMonth, loc)
 	if err != nil {
 		return 0, nil, err
 	}
-
-	// get last day
-	/*
-		t, err := time.ParseInLocation("2006-01", yearMonth, loc)
-		if err != nil {
-			return 0, nil, err
-		}
-		//lastDayTimeFormat := t.AddDate(0, 1, 0).AddDate(0, 0, -1)
-	*/
-	lastDayTimeFormat := date.AddDate(0, 0, 6)
+	lastDayTimeFormat := t.AddDate(0, 1, 0).AddDate(0, 0, -1)
 	lastDay, err := strconv.Atoi(lastDayTimeFormat.Format("02"))
 	if err != nil {
 		return 0, nil, err
@@ -69,13 +64,18 @@ func (c *CalendarEvents) GetCalendarMonthly(rotationId int, yearMonth string) (i
 		}
 	}
 
+	conn, err := db.NewConnection()
+	if err != nil {
+		return http.StatusInternalServerError, nil, err
+	}
+
 	for _, day := range days {
 		s, err := NewSchedule(rotationId, day)
 		if err != nil {
 			return http.StatusInternalServerError, nil, err
 		}
 
-		statusCode, resp, err := s.GetSchedule()
+		statusCode, resp, err := s.QuerySchedules(conn)
 		if err != nil {
 			return statusCode, nil, err
 		}
