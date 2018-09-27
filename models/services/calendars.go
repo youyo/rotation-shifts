@@ -35,7 +35,7 @@ func (c *CalendarEvents) GetCalendarMonthly(rotationId int, yearMonth string) (i
 	if err != nil {
 		return 0, nil, err
 	}
-	lastDayTimeFormat := t.AddDate(0, 1, 0).AddDate(0, 0, -1)
+	lastDayTimeFormat := t.AddDate(0, 3, 0).AddDate(0, 0, -1)
 	lastDay, err := strconv.Atoi(lastDayTimeFormat.Format("02"))
 	if err != nil {
 		return 0, nil, err
